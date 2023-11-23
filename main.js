@@ -1,10 +1,11 @@
-let boxes = document.querySelectorAll(".box");
+"use strict";
+const boxes = document.querySelectorAll(".box");
 let answers = Array.from(document.querySelectorAll(".answer"));
 let specifier = document.querySelector(".specifier");
 let nextRoundBtn = document.querySelector(".next-round");
 
 function randomActions() {
-  allRandoms = new Array(3).fill(undefined);
+  let allRandoms = new Array(3).fill(undefined);
   allRandoms[0] = Math.trunc(Math.random() * 50 + 1);
   allRandoms[1] = Math.trunc(Math.random() * 50 + 1);
   allRandoms[2] = ["+", "-", "*"].sort(() => Math.random() - 0.5)[0];
@@ -30,14 +31,14 @@ function checkWinner() {
   );
   answers.forEach((item, i) => {
     item.textContent = wrongAnswer[i];
-    item.addEventListener("click", () => {
+    item.addEventListener("click", (e) => {
       if (item.textContent == total) {
         item.classList.add("winner");
         specifier.textContent = "correct answer";
-        gameEnd(item);
+        gameEnd(e);
       } else {
         item.classList.add("not-win");
-        gameEnd(item);
+        gameEnd(e);
       }
     });
   });
@@ -45,23 +46,23 @@ function checkWinner() {
 checkWinner();
 
 function gameEnd(box) {
-  if (box.classList.contains("winner") || box.classList.contains("not-win")) {
+  if (box.target.classList.contains("winner") || box.target.classList.contains("not-win")) {
     for (let item of answers) {
       item.style.pointerEvents = "none";
     }
   }
-  if (box.classList.contains("not-win")) {
+  if (box.target.classList.contains("not-win")) {
     specifier.textContent = "wrong answer";
-    for(let item of answers) {
-        if(item.textContent == total){
-            item.classList.add("winner");
-        }
+    for (let item of answers) {
+      if (item.textContent == total) {
+        item.classList.add("winner");
+      }
     }
   }
 }
 
 function newGame() {
-  specifier.textContent = "";
+  specifier.textContent = "GAME";
   randomAnswer = randomActions();
   placementOfActions();
   total = placementOfActions();
